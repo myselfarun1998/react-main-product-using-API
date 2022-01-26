@@ -1,40 +1,62 @@
+import { Button } from 'react-bootstrap';
 import React from 'react';
+import Badge from '@material-ui/core/Badge';
+import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
+import Button from '@material-ui/core/Button';
 
 export default class App extends React.Component {
   constructor() {
     super();
     this.state = {
+      div1Shown: true,
       productData: [],
+      cart: [],
     };
-    // console.log('hi...');
   }
+  addTodo = (event) => {
+    this.setState({
+      arr: this.state.cart.push(event),
+    });
+    this.itemCount = this.state.cart.length;
+    console.log(this.state.cart);
+  };
+  cartTodo = (event) => {
+    console.log(event);
+    this.setState({
+      div1Shown: false,
+    });
+  };
+  prdTodo = (event) => {
+    this.setState({
+      div1Shown: true,
+    });
+    console.log(this.state.div1Shown);
+  };
   componentDidMount() {
-    // console.log('hi123');
     let axios = require('axios');
     axios
       .get('https://freeestoreapi.herokuapp.com/api/v1/products')
-      // .get(' https://jsonplaceholder.typicode.com/photos')
-
       .then((response) => {
-        // handle success
-        //   console.log(JSON.stringify(response.data));
         const d = response.data;
         this.setState({ productData: d.data.products });
         console.log(d.data.products);
       });
-    /* fetch('https://jsonplaceholder.typicode.com/users')
-      .then((res) => res.json())
-      .then((json) => {
-        this.setState({
-          userData: json,
-        });
-      });*/
-    //  console.log(this.state.userData);
   }
+
   render() {
-    return (
+    return this.state.div1Shown ? (
       <div className="container">
-        <h1> Fetch data from an api in react </h1>{' '}
+        <h5>Product Details</h5>{' '}
+        <Badge color="secondary" badgeContent={this.itemCount}>
+          <ShoppingCartIcon />{' '}
+        </Badge>
+        <Button
+          style={{ marginLeft: '2px' }}
+          type="button"
+          onClick={() => this.cartTodo(this.state.cart)}
+        >
+          View cart
+        </Button>
         <div className="row">
           {this.state.productData.map((product) => (
             <div className="card d-flex col-3 mydel" key={product.id}>
@@ -42,10 +64,45 @@ export default class App extends React.Component {
                 className="card-img-top"
                 src={`https://freeestoreapi.herokuapp.com/images/products/${product.images[0]}`}
               />
+              <p>{product.name}</p>
+              <p className="btn btn-primary">₹{product.price}</p>
+              <Button
+                style={{ marginTop: '12%' }}
+                onClick={() => this.addTodo(product)}
+                className="success"
+              >
+                Add to Cart
+              </Button>
+            </div>
+          ))}
+        </div>
+      </div>
+    ) : (
+      <div>
+        <Button
+          style={{ marginLeft: '2px' }}
+          type="button"
+          onClick={() => this.prdTodo()}
+        >
+          go to products
+        </Button>
+        <div className="row">
+          {this.state.cart.map((product) => (
+            <div className="card d-flex col-3 mydel" key={product.id}>
+              <img
+                className="card-img-top"
+                style={{ size: '2px' }}
+                src={`https://freeestoreapi.herokuapp.com/images/products/${product.images[0]}`}
+              />
               <p className="card-body">{product.name}</p>
               <p className="btn btn-primary">₹{product.price}</p>
             </div>
           ))}
+          {this.state.cart.length === 0 && (
+            <p className="card-body" style={{ marginLeft: '50px' }}>
+              No items in your cart
+            </p>
+          )}
         </div>
       </div>
     );
