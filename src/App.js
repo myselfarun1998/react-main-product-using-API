@@ -9,6 +9,7 @@ export default class App extends React.Component {
     super();
     this.state = {
       div1Shown: true,
+      test: true,
       productData: [],
       cart: [],
     };
@@ -26,6 +27,11 @@ export default class App extends React.Component {
       div1Shown: false,
     });
   };
+  delete(itemToDelete) {
+    this.setState((state) => ({
+      cart: state.cart.filter((item) => itemToDelete !== item),
+    }));
+  }
   prdTodo = (event) => {
     this.setState({
       div1Shown: true,
@@ -48,7 +54,7 @@ export default class App extends React.Component {
       <div className="container">
         <h5>Product Details</h5>{' '}
         <Badge color="secondary" badgeContent={this.itemCount}>
-          <ShoppingCartIcon />{' '}
+          <ShoppingCartIcon onClick={() => this.cartTodo(this.state.cart)} />{' '}
         </Badge>
         <Button
           style={{ marginLeft: '2px' }}
@@ -96,6 +102,8 @@ export default class App extends React.Component {
               />
               <p className="card-body">{product.name}</p>
               <p className="btn btn-primary">₹{product.price}</p>
+
+              <button onClick={() => this.delete()}>remove</button>
             </div>
           ))}
           {this.state.cart.length === 0 && (
