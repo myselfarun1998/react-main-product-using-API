@@ -21,6 +21,13 @@ export default class App extends React.Component {
     this.itemCount = this.state.cart.length;
     console.log(this.state.cart);
   };
+  detTodo = (event) => {
+    this.setState({
+      arr: this.state.cart.shift(event),
+    });
+    this.itemCount = this.state.cart.length;
+    console.log(this.state.cart);
+  };
   cartTodo = (event) => {
     console.log(event);
     this.setState({
@@ -103,7 +110,7 @@ export default class App extends React.Component {
               <p className="card-body">{product.name}</p>
               <p className="btn btn-primary">₹{product.price}</p>
 
-              <button onClick={() => this.delete()}>remove</button>
+              <button onClick={() => this.detTodo(product)}>remove</button>
             </div>
           ))}
           {this.state.cart.length === 0 && (
