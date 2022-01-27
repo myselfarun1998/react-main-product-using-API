@@ -92,6 +92,10 @@ export default class App extends React.Component {
       </div>
     ) : (
       <div>
+        {' '}
+        <Badge color="secondary" badgeContent={this.itemCount}>
+          <ShoppingCartIcon onClick={() => this.cartTodo(this.state.cart)} />{' '}
+        </Badge>
         <Button
           style={{ marginLeft: '2px' }}
           type="button"
